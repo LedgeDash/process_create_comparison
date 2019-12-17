@@ -139,5 +139,5 @@ fn main() {
         }
     }
 
-    println!("{:?}", t2-t1);
+    eprintln!("{:?}", t2-t1);
 }
