@@ -1,0 +1,25 @@
+[package]
+name = "process_create_compare"
+version = "0.1.0"
+authors = ["David H. Liu <hl7@cs.princeton.edu>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "foo"
+path = "bin/foo/main.rs"
+
+[[bin]]
+name = "prime"
+path = "bin/prime/main.rs"
+
+[[bin]]
+name = "uppertolower"
+path = "bin/uppertolower/main.rs"
+
+[dependencies]
+nix = "*"
+clap = "*"
+libc = "*"
+time = "0.1"
