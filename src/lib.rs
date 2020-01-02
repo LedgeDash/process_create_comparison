@@ -24,6 +24,7 @@ pub fn fork_exec(binary: &str) -> Pid {
     }
 }
 
+/// vfork() Deprecated since 0.2.66: causes memory corruption, see rust-lang/libc#1596
 pub fn vfork_exec(binary: &str) -> Pid {
 
     let s = CString::new(binary).expect("CString::new failed");
@@ -44,6 +45,7 @@ pub fn vfork_exec(binary: &str) -> Pid {
     }
 }
 
+/// `std::process::Command` uses libc::posix_spawn to create child process
 pub fn posix_spawn(binary: &str) -> Pid {
 
     let s = CString::new(binary).expect("CString::new failed");
@@ -64,6 +66,7 @@ pub fn posix_spawn(binary: &str) -> Pid {
     }
 }
 
+/// create a process using the `std::process::Command` API
 pub fn command(binary: &str) -> Child {
     let child = Command::new(binary).spawn().expect("Spawn failed");
 
