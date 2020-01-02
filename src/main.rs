@@ -98,46 +98,32 @@ fn main() {
 
     let t1 = precise_time_ns();
     for _ in 0..count {
-        let cpid = match method {
+        match method {
             0 => {
-                fork_exec(binary)
+                fork_exec(binary);
+                let status = wait::wait();
+                if let Ok(wait::WaitStatus::Exited(_, _)) = status {
+                    num_children = num_children + 1;
+                }
             }
             1 => {
-                vfork_exec(binary)
+                vfork_exec(binary);
             }
             2 => {
-                posix_spawn(binary)
+                posix_spawn(binary);
             }
             3 => {
-                let c = command(binary);
-                commands.push(c);
-                Pid::from_raw(-1)
+                let mut c = command(binary);
+                c.wait().expect("failed to wait for child");
+                num_children = num_children + 1;
             }
             _ => {
                 panic!("Unknown process creation method");
             }
         };
 
-        let cpid = cpid.as_raw();
-        if cpid != -1 {
-            cpids.push(Pid::from_raw(cpid));
-            num_children = num_children+1;
-        }
     }
     let t2 = precise_time_ns();
-
-    if method != 3 {
-        while num_children > 0 {
-            let status = wait::wait();
-            if let Ok(wait::WaitStatus::Exited(_, _)) = status {
-                num_children = num_children-1;
-            }
-        }
-    } else {
-        for mut child in commands {
-            child.wait().expect("Failed to wait for child");
-        }
-    }
 
     eprintln!("{:?}", t2-t1);
 }
